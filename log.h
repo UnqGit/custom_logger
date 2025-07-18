@@ -1,7 +1,22 @@
+#pragma once
+
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <print>
+#include <format>
 #include <string>
+#include <concepts>
+
+// Sugar file....beware of diabetes.
+
+template <typename T>
+requires std::floating_point<T> || std::integral<T>
+std::string operator+(const std::string &str, T value) {return str + std::to_string(value);}
+
+template <typename T>
+requires std::floating_point<T> || std::integral<T>
+std::string operator+(T value, const std::string &str) {return std::to_string(value) + str;}
 
 class Console {
   private:
@@ -9,7 +24,7 @@ class Console {
     Console(const Console&) = delete;
     Console& operator=(const Console&) = delete;
   public:
-    static Console& instance() {
+    constexpr static Console& instance() {
       static Console instance;
       return instance;
     }
@@ -30,6 +45,14 @@ class Console {
     void log_mln(const auto &...Args) {
       ((std::cout << Args << '\n'), ...);
     }
+    template <typename... Args>
+    void logf(const std::format_string<Args...> &fmt, Args&&... args) {
+      std::print(fmt, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    void log_fln(const std::format_string<Args...> &fmt, Args&&... args) {
+      std::println(fmt, std::forward<Args>(args)...);
+    }
     
     // Gives true, if occured successfully.
     bool get(auto &variable) {
@@ -40,9 +63,11 @@ class Console {
     bool getln(auto &variable) {
       return std::getline(std::cin, variable);
     }
-    void getm(auto &...Args) {
-      ((std::cin >> Args), ...);
+    bool getm(auto &...Args) {
+      bool successful = true;
+      successful &= (bool)((std::cin >> Args), ...);
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      return successful;
     }
     
     void pause(const std::string &pause_message = "") {
