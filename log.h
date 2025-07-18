@@ -29,16 +29,23 @@ class Console {
       return instance;
     }
     
-    void log(const auto &arg) {
+    void log(const auto &arg) { // Log to the console.
       std::cout << arg;
     }
-    void logln(const auto &arg) {
+    void logln(const auto &arg) { // Log to the console with a newline character at the end.
       std::cout << arg << '\n';
     }
-    void log(const auto &...Args) {
-      ((std::cout << Args << ' '), ...);
+    void log(const auto &...Args) { // Logs multiple inputs without a space in between.
+      ((std::cout << Args), ...);
     }
     void logln(const auto &...Args) {
+      ((std::cout << Args), ...);
+      std::cout << '\n';
+    }
+    void logs(const auto &...Args) {
+      ((std::cout << Args << ' '), ...);
+    }
+    void log_sln(const auto &...Args) {
       ((std::cout << Args << ' '), ...);
       std::cout << '\n';
     }
@@ -70,6 +77,10 @@ class Console {
       return successful;
     }
     
+    void clog(const auto &...Args) {
+      ((std::cerr << Args), ...);
+    }
+    
     void pause(const std::string &pause_message = "") {
       std::cout << pause_message;
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -78,13 +89,13 @@ class Console {
       std::cout << pause_message;
       std::this_thread::sleep_for(std::chrono::seconds(seconds));
     }
-    void pause_ms(size_t milliseconds, const std::string &pause_message = "") {
-      std::cout << pause_message;
-      std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-    }
-    void pause_ms(float seconds, const std::string &pause_message = "") {
+    void pause(float seconds, const std::string &pause_message = "") {
       std::cout << pause_message;
       if(seconds < 0) throw std::invalid_argument("Can't sleep for negative seconds.");
       std::this_thread::sleep_for(std::chrono::milliseconds((size_t)(1000*seconds)));
+    }
+    void pause_ms(size_t milliseconds, const std::string &pause_message = "") {
+      std::cout << pause_message;
+      std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
     }
 };
