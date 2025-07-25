@@ -95,9 +95,9 @@ class Console {
     }
 
     bool get(auto &variable) { // Gives true, if occured successfully.
-      bool successful = (std::cin >> variable);
+      (std::cin >> variable);
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      return successful;
+      return !std::cin.bad();
     }
 
     bool getln(auto &variable, char delimiter = '\n') {
@@ -105,10 +105,9 @@ class Console {
     }
 
     bool getm(auto &...Args) {
-      bool successful = true;
-      successful &= (bool)((std::cin >> Args), ...);
+      (bool)((std::cin >> Args), ...);
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      return successful;
+      return !std::cin.bad();
     }
 
     Console& clog(const auto &...Args) {
