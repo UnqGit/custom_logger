@@ -100,8 +100,8 @@ class Console {
       return successful;
     }
 
-    bool getln(auto &variable) {
-      return std::getline(std::cin, variable);
+    bool getln(auto &variable, char delimiter = '\n') {
+      return std::getline(std::cin, variable, delimiter);
     }
 
     bool getm(auto &...Args) {
@@ -152,12 +152,9 @@ class Exception {
       return instance;
     }
 
-    Exception& raise(err err_type, const auto &message, const std::string &heading = "") noexcept {
-      return *this;
-    }
-    Exception& raise_if(bool if_statement, err err_type, auto &message, const std::string &heading = "") noexcept {
-      return *this;
-    }
+    Exception& raise(const std::string &message, err err_type = err::runtime_error, const std::string &heading = "", bool throw_err = true) noexcept;
+    Exception& raise_if(bool if_statement, const std::string &message, err err_type = err::runtime_error, const std::string &heading = "", bool throw_err = true) noexcept;
+    Exception& raise_ifn(bool if_statement, const std::string &message, err err_type = err::runtime_error, const std::string &heading = "", bool throw_err = true) noexcept;
 
     Exception& log(auto &...Args) {
       ((std::cerr << Args), ...);
